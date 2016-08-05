@@ -1,0 +1,10 @@
+.navbar-fixed-top {
+	position: relative;
+}
+
+#forecast_bar {
+	background-color: #DDDDDD;
+	margin-top: 25px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
