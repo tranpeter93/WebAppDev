@@ -1,5 +1,4 @@
 var express = require('express')
-var db = require("./db")
 var app = express()
 
 app.set('port', (process.env.PORT || 8080));
