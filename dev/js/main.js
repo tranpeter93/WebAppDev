@@ -11,39 +11,39 @@ var MainConstants = require("./Constants/MainConstants")
 
 var App = React.createClass({
 
-	componentDidMount: function() {
-		MainStore.addChangeListener(this._onChange);
-	},
+   componentDidMount: function() {
+      MainStore.addChangeListener(this._onChange);
+   },
 
-	componentWillUnmount: function() {
-		MainStore.removeChangeListener(this._onChange);
-	},
+   componentWillUnmount: function() {
+      MainStore.removeChangeListener(this._onChange);
+   },
 
-	_onChange: function() {
-		this.setState({_currentPage: MainStore.get()});
-	},
+   _onChange: function() {
+      this.setState({_currentPage: MainStore.get()});
+   },
 
-	getInitialState: function() {
-		return {_currentPage: MainStore.get()}
-	},
+   getInitialState: function() {
+      return {_currentPage: MainStore.get()}
+   },
 
-	render: function() {
-		return (
-			<div>
-				<Navbar />
-				<div>
-				{(() => {
-					switch(this.state._currentPage) {
-					  case MainConstants.PAGES["FORECAST"]: return <Forecast />;
-					  case MainConstants.PAGES["LANDING"]: return <Landing />;
-					  case MainConstants.PAGES["YTPLAYER"]: return <YTPlayer />
-					  default: return <Landing />;
-					}
-				  })()}
-				</div>
-			</div>
-		)
-	}
+   render: function() {
+      return (
+         <div>
+            <Navbar />
+            <div>
+            {(() => {
+               switch(this.state._currentPage) {
+                 case MainConstants.PAGES["FORECAST"]: return <Forecast />;
+                 case MainConstants.PAGES["LANDING"]: return <Landing />;
+                 case MainConstants.PAGES["YTPLAYER"]: return <YTPlayer />
+                 default: return <Landing />;
+               }
+              })()}
+            </div>
+         </div>
+      )
+   }
 })
 
 ReactDOM.render(<App />, document.getElementById("container"))
