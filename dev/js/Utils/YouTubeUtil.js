@@ -1,7 +1,6 @@
 var Constants = require("../Constants/YoutubeConstants")
 var AppDispatcher = require("../Dispatcher/AppDispatcher")
 
-
 var YoutubeUtilities = {
 
    // Retrieves Youtube data
@@ -21,7 +20,9 @@ var YoutubeUtilities = {
    // Authenticates user
    auth: function() {
       gapi.load("auth2", function() {
+         console.log("Auth 2 Loaded")
          gapi.auth2.init({"client_id": Constants.CLIENT_ID}).then(() => {
+            console.log("Auth 2 Initialized")
             YoutubeUtilities.initPlayer()
          });
       });
@@ -29,35 +30,27 @@ var YoutubeUtilities = {
 
    initPlayer: function() {
       gapi.load('client', function() {
-         gapi.client.load('youtube', 'v3')
-            // .catch(function(err) {
-            //    console.log("Load YoutubeV3 Error: " + err);
-            // });
+         console.log("gapi.client loaded")
+         gapi.client.load('youtube', 'v3', () => {
+            console.log('youtube v3 loaded')
+         })
       });
    },
 
    signInHandler: function() {
-      var params;
-
-      gapi.auth2.getAuthInstance().signIn()
-         .then(function() {
-            require("../Actions/youtubeAction").getChannels()
-         })
-
-         // .catch(function(err) {
-         //    console.log("Authentication Error: " + err);
-         // });
+      var authInstance = gapi.auth2.getAuthInstance();
+      authInstance.signIn().then(function() {
+         console.log("sign in successful")
+         require("../Actions/youtubeAction").getChannels()
+         require("../Actions/youtubeAction").getPlaylists()
+      })
    },
 
    signOutHandler: function() {
-      gapi.auth2.getAuthInstance().signOut()
-         .then(function() {
-            console.log("Sign Out Success");
-         })
-
-         // .catch(function(err) {
-         //    console.log("Sign out Error: " + err);
-         // });
+      var authInstance = gapi.auth2.getAuthInstance()
+      authInstance.signOut().then(function() {
+         console.log("sign out successful");
+      })
    }
 }
 

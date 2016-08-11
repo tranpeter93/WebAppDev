@@ -4,9 +4,40 @@
    margin-bottom: 0px;
 }
 
+#sidebar {
+   background-color: #111111;
+   height: 200vh;
+   padding-top: 10px;
+   margin-bottom: 10px;
+   margin-right: 10px;
+}
+
+#sidebar-ytLabel {
+   color: red
+}
+
+.sidebar-section-header {
+   /*background-color: #123456;*/
+   border-radius: 0px;
+   border-color: #123456;
+}
+
 #forecast_bar {
    background-color: #DDDDDD;
    margin-top: 25px;
    padding-top: 20px;
    padding-bottom: 20px;
+}
+
+.sidebar-container {
+   list-style-type: none;
+   padding: 0px;
+}
+
+.sidebar-section {
+   margin-bottom: 10px;
+}
+
+#search-box {
+   margin-bottom: 15px;
 }
