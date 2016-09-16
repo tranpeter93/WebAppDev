@@ -7,9 +7,14 @@ var Constants = {
    RESC: {
       PLAYLISTS: "playlists",
       PLAYLISTITEMS: "playlistItems",
-      CHANNELS: "channels"
+      CHANNELS: "channels",
+      VIDEOS: "videos"
+
    },
+   SEARCH_USERNAME: "SEARCH_USERNAME",
+   SEARCH_TOGGLE: "SEARCH_TOGGLE",
    UPDATE: "UPDATE",
+   PROFILE: "PROFILE",
    SIGN_IN: "SIGN_IN",
    CHANGE: "CHANGE"
 }

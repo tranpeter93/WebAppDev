@@ -1,6 +1,7 @@
 var React = require("react")
 var MainActions = require("../Actions/MainAction")
 var MainConstants = require("../Constants/MainConstants")
+// var Link = require("react-router").Link
 
 var Navbar = React.createClass({
    landingHandler: function() {
@@ -26,7 +27,7 @@ var Navbar = React.createClass({
 
                   <ul className="dropdown-menu">
                      <li><a href="#" onClick={this.forecastHandler}>Forecast</a></li>
-                     <li><a href="#" onClick={this.ytPlayerHandler}>YouTube Playlist</a></li>
+                     <li><a>YouTube Playlist</a></li>
                   </ul>
                </li>
             </ul>

@@ -7,9 +7,7 @@ var YTComponents = require("./ytComponents")
 var YTPlaylist = React.createClass({
 
    getInitialState: function() {
-      var initState = YoutubeStore.get()
-      console.log("===Initial State=== ", initState)
-      return initState
+      return YoutubeStore.get()
    },
 
    componentDidMount: function() {
@@ -23,12 +21,10 @@ var YTPlaylist = React.createClass({
    },
 
    componentDidUpdate: function(prevProps, prevState) {
-      console.log("***changed state***")
-      var playlistItems = this.state.playlistItems
       if (prevState.playlists !== this.state.playlists) {
          YoutubeAction.getPlaylistItems({
             part: "snippet",
-            playlistId: this.state.playlists[0].id, //this.state.playlists.items[0].id,
+            playlistId: this.state.playlists[0].id,
             maxResults: 50
          });
       }
@@ -36,18 +32,16 @@ var YTPlaylist = React.createClass({
 
    _onChange: function() {
       this.setState(YoutubeStore.get());
-      console.log("===Changed State=== ", this.state);
+      console.log(YoutubeStore.get())
    },
 
    render: function() {
-      // <YTComponents.Library items={this.state.playlistItems} />
-
+      // <YTComponents.ViewBox />
       return (
-         <div className="container-fluid" style={{paddingLeft: "0px", margin: "0px", backgroundColor: "#000000"}}>
+         <div className="content-container">
             <YTComponents.SideBar isSignedIn={this.state.isSignedIn} channels={this.state.channels} playlists={this.state.playlists}/>
-            <div className="text-center" style={{paddingTop: "10px"}}>
-               <YTComponents.Library items={this.state.playlistItems} />
-            </div>
+            <YTComponents.SearchResult items={this.state.searchResult.data} isVisible={this.state.searchResult.isVisible}/>               
+            <YTComponents.Library items={this.state.playlistItems} />
          </div>
       )
    }

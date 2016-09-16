@@ -28,6 +28,7 @@ var YoutubeUtilities = {
       });
    },
 
+   // Initialize YT player
    initPlayer: function() {
       gapi.load('client', function() {
          console.log("gapi.client loaded")
@@ -38,12 +39,7 @@ var YoutubeUtilities = {
    },
 
    signInHandler: function() {
-      var authInstance = gapi.auth2.getAuthInstance();
-      authInstance.signIn().then(function() {
-         console.log("sign in successful")
-         require("../Actions/youtubeAction").getChannels()
-         require("../Actions/youtubeAction").getPlaylists()
-      })
+      return gapi.auth2.getAuthInstance().signIn();
    },
 
    signOutHandler: function() {
@@ -51,6 +47,18 @@ var YoutubeUtilities = {
       authInstance.signOut().then(function() {
          console.log("sign out successful");
       })
+   },
+
+   getBasicProfile() {
+      var profile = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile();
+
+      return {
+         fullName: profile.getName(),
+         givenName: profile.getGivenName(),
+         familyName: profile.getFamilyName(),
+         imageUrl: profile.getImageUrl(),
+         email: profile.getEmail()
+      }
    }
 }
 

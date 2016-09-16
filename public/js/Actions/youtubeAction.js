@@ -13,78 +13,109 @@ var YoutubeAction = {
    },
 
    signIn: function() {
-      YoutubeUtil.signInHandler();
-      AppDispatcher.handleViewAction({
-         actionType: YoutubeConstants.SIGN_IN,
-         data: true
-      });
+      YoutubeUtil.signInHandler().then(
+         (resp) => {
+            console.log("Login successful.");
+            var profile = YoutubeUtil.getBasicProfile()
+            console.log("profile: ", profile);
+            YoutubeAction.update(YoutubeConstants.PROFILE, profile);
+            YoutubeAction.update(YoutubeConstants.SIGN_IN, true);
+         },
+         (err) => {
+            console.log("Encountered an error logging in.");
+         }
+      );
    },
 
    signOut: function() {
-      YoutubeUtil.signOutHandler();
-      AppDispatcher.handleViewAction({
-         actionType: YoutubeConstants.SIGN_IN,
-         data: false
-      });
-   },
-
-   setActive: function(item, resourceType) {
-      //TODO: Implement
+      YoutubeUtil.signOutHandler().then((resp) => {
+         YoutubeAction.update(YoutubeConstants.SIGN_IN, false);
+      })
    },
 
    update: function(item, resourceType) {
-      console.log("===Update: Dispatch===\n", resourceType, item)
       AppDispatcher.handleDataAction({
          actionType: resourceType,
          data: item
       });
-   },
 
-   /**
-    * Relevant-Filters:
-    *  forUsername::String, id::String, mine::boolean
-    * Optional Params:
-    *  maxResults::uInt, pageToken::String
-    */
-   getChannels: function() {
-      var resourceType = YoutubeConstants.RESC.CHANNELS;
-      var request = YoutubeUtil.get(resourceType, {part: "snippet", mine: true});
-      var req = request.execute(function(resp) {
-         if (!resp.items || !resp.items.length) return;
-
-         YoutubeAction.update(resp.items, resourceType);
+      return new Promise(function(resolve, reject) {
+         resolve(item)
       })
    },
 
-   /**
-    * Relevant-Filters:
-    *  channelId::String, id::String, mine::boolean
-    * Optional Params:
-    *  maxResults::uInt, pageToken::String
-    **/
-   getPlaylists: function() {
-      var resourceType = YoutubeConstants.RESC.PLAYLISTS;
-      var request = YoutubeUtil.get(resourceType, {part: "snippet", mine: true});
-      var req = request.execute((resp) => {
-         if (!resp.items || !resp.items.length) return;
+   search(username) {
+      var arr = [];
 
-         YoutubeAction.update(resp.items, resourceType)
+      this.getChannels(username)
+      .then((resp) => {
+         resp.result.items.map((item) => {
+            this.getPlaylists(item.id)
+            .then((resp) => {
+               resp.result.items.map((item) => {
+                  arr.push(item.snippet.title)
+               })
+
+               this.update(arr.join(), YoutubeConstants.SEARCH_USERNAME)
+            })
+         })
+
+
+      })
+   },
+
+   toggleSearch(val) {
+      this.update(val, YoutubeConstants.SEARCH_TOGGLE);
+   },
+
+   getChannels: function(username) {
+      var resourceType = YoutubeConstants.RESC.CHANNELS;
+      var params = {part: "snippet", forUsername: username}
+
+      return YoutubeUtil.get(resourceType, params)
+      .then(function(resp) {
+
+         return new Promise((resolve, reject) => {
+            resolve(resp)
+         })
+      })
+   },
+
+   getPlaylists: function(ch_id) {
+      var resourceType = YoutubeConstants.RESC.PLAYLISTS;
+      var params = {part: "snippet", channelId: ch_id}
+
+      return YoutubeUtil.get(resourceType, params)
+      .then((resp) => {
+
+         return new Promise((resolve, reject) => {
+            resolve(resp)
+         })
+      })
+   },
+
+   getPlaylistItems: function(params) {
+      var resourceType = YoutubeConstants.RESC.PLAYLISTITEMS;
+      YoutubeUtil.get(resourceType, params)
+      .then((resp) => {
+         // YoutubeAction.update(resp.result.items, resourceType)
+
+         return new Promise((resolve, reject) => {
+            resolve(resp)
+         })
       });
    },
 
-   /**
-    * Relevant-Filters:
-    *  id::String, playlistId::String
-    * Optional Params:
-    *  maxResults::uInt, pageToken::String, videoId::String
-    **/
-   getPlaylistItems: function(params) {
-      var resourceType = YoutubeConstants.RESC.PLAYLISTITEMS;
-      var request = YoutubeUtil.get(resourceType, params);
-      var req = request.execute((resp) => {
-         if (!resp.items || !resp.items.length) return;
-         YoutubeAction.update(resp.items, resourceType)
-      });
+   getVideos: function(params) {
+      var resourceType = YoutubeConstants.RESC.VIDEOS;
+      YoutubeUtil.get(resourceType, params)
+      .then((resp) => {
+         // YoutubeAction.update(resp.result.items, resourceType)
+
+         return new Promise((resolve, reject) => {
+            resolve(resp)
+         })
+      })
    }
 }
 

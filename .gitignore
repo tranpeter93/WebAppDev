@@ -1,4 +1,4 @@
 dev/Thumbs.db
 weather-icon.zip
 npm-debug.log
-./node_modules/
+node_modules/

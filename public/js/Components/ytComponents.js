@@ -1,18 +1,13 @@
 var React = require("react")
 var YoutubeAction = require("../Actions/youtubeAction")
-// var YoutubeStore = require("../Stores/youtubeStore")
 
 var YTComponents = {
 
    SideBar: React.createClass({
-      shouldComponentUpdate: function(nextProps, nextState) {
-         return nextProps !== this.props
-      },
-
       render: function() {
          return (
-            <div id="sidebar" className="col-xs-2">
-               <ul className="sidebar-container">
+            <div id="sidebar" className="col-xs-3 col-md-2">
+               <ul id="sidebar-container">
                   <li className="sidebar-section">
                      <YTComponents.SearchBox />
                   </li>
@@ -25,8 +20,11 @@ var YTComponents = {
                   </li>
 
                   <li className="sidebar-section">
-                     <div style={{color: "#2AAAAA"}}>
-                        <a className="sidebar-section-header" href="/channels">Channels</a>
+                     <div>
+                        <div>
+                           <span className="glyphicon glyphicon-book"></span>
+                           <a className="sidebar-section-header" href="/channels">Channels</a>
+                        </div>
                         <ul style={{padding: "0px"}}>
                            {this.props.channels.map(function(item) {
                               return (
@@ -44,7 +42,10 @@ var YTComponents = {
 
                   <li className="sidebar-section">
                      <div>
-                        <a className="sidebar-section-header" href="/playlists">Playlists</a>
+                        <div>
+                           <span className="glyphicon glyphicon-list"></span>
+                           <a className="sidebar-section-header" href="/playlists">Playlists</a>
+                        </div>
                         <ul style={{padding: "0px"}}>
                            {this.props.playlists.map(function(item) {
                               return (
@@ -67,22 +68,48 @@ var YTComponents = {
 
    SearchBox: React.createClass({
       search: function () {
-
+         YoutubeAction.search(this.refs.userSearch.value);
+         YoutubeAction.toggleSearch(true);
       },
 
       render: function() {
+
          return (
             <div id="search-box">
                <form className="form-inline">
                   <div className="input-group">
-                     <input type="text" placeholder="Username" className='form-control' style={{border: "none", borderRadius: "0px"}}></input>
+                     <input type="text" ref="userSearch" placeholder="Username" className='form-control' style={{border: "none", borderRadius: "0px"}}></input>
                      <span className="input-group-btn" style={{backgroundColor: "white"}}>
-                        <button type="submit" className="btn btn-success" style={{backgroundColor: "white", border: "none"}}>
+                        <button type="button" className="btn" onClick={this.search}
+                           style={{backgroundColor: "white", border: "none"}}>
                            <span className="glyphicon glyphicon-search" style={{color: "black"}}></span>
                         </button>
                      </span>
                   </div>
                </form>
+            </div>
+         )
+      }
+   }),
+
+   SearchResult: React.createClass({
+      close: function() {
+         YoutubeAction.toggleSearch(false);
+      },
+
+      render: function() {
+         return (
+            <div id="search-result" className={(this.props.isVisible ? "show" : "hide") + " panel col-sm-3"}>
+               <div style={{textAlign: "right", marginTop: "12px"}}>
+                  <a className="btn glyphicon glyphicon-remove"
+                     style={{border: "1px #337ab7 solid"}}
+                     onClick={this.close}>
+                  </a>
+               </div>
+               <div className="content-header">Search Results</div>
+               <ul id="search-result-list">
+                  <li className="btn">{this.props.items}</li>
+               </ul>
             </div>
          )
       }
@@ -107,8 +134,7 @@ var YTComponents = {
    LoginBox: React.createClass({
       render: function() {
          return (
-            <button className="btn btn-sm btn-primary-outline"
-               style={{backgroundColor: "red", color: "white", marginLeft: "5px"}}
+            <button id="login-box" className="btn btn-sm btn-primary-outline"
                onClick={this.props.isSignedIn ? YoutubeAction.signOut : YoutubeAction.signIn}>
                {this.props.isSignedIn ? "Sign-Out" : "Sign-In"}
             </button>
@@ -116,49 +142,48 @@ var YTComponents = {
       }
    }),
 
-   YoutubeBox: React.createClass({
+   Library: React.createClass({
+
       render: function() {
+
+         // <img src={item.snippet.thumbnails && item.snippet.thumbnails.default.url} height="24px"></img>
          return (
-            <div>
-               <button className="btn btn-info" onClick={this.props.handler}>{this.props.title}</button>
-               <div className={(this.props.data && this.props.data.length) ? "show" : "hide" }>
-                  <ul>
-                     {this.props.data.map((item) => {
-                        return (
-                           <span key={item.id}>
-                              <button className="btn btn-default">{item.snippet.title}</button>
-                           </span>
-                        )
-                     })}
-                  </ul>
+            <div className="col-xs-8 col-md-8">
+               <div className="content-header">
+                  <span>Library</span>
                </div>
+               <ul>
+                  {this.props.items.map(function(item) {
+                     return (
+                        <li className="row" style={{listStyleType: "none"}}>
+                           <div key={item.snippet.position}>
+                              <div>
+                                 <a style={{marginRight: "12px"}} className="btn glyphicon glyphicon-play-circle" href={"/" + item.snippet.id}></a>
+                                 <span style={{color: "white"}}>{item.snippet.title}</span>
+                              </div>
+                           </div>
+                        </li>
+                     )
+                  })}
+               </ul>
             </div>
          )
       }
    }),
 
-   Library: React.createClass({
-
+   ViewBox: React.createClass({
       render: function() {
          return (
-            <div className="row">
-               <div style={{marginBottom: "20px", textAlign: "left", color: "#123456", fontSize: "32px", borderBottom: "2px #123456 solid"}}>Library</div>
-               {this.props.items.map(function(item) {
-                  return (
-                     <div key={item.snippet.position}
-                        className="thumbnail col-sm-2 col-md-1"
-                        style={{float: "left", marginRight: "10px", marginLeft: "10px", height:"80px", borderRadius: "0px", backgroundColor: "#123456", borderColor: "#000000"}}>
-                        <img src={item.snippet.thumbnails && item.snippet.thumbnails.default.url}></img>
-                     </div>
-                  )
-                  })
-               }
+            <div className="view-group">
+               <div>
+                  <span className="glyphicon glyphicon-th view--group-option"></span>
+                  <span className="glyphicon glyphicon-th-large view-group-option"></span>
+                  <span className="glyphicon glyphicon-th-list view-group-option"></span>
+               </div>
             </div>
          )
       }
    })
-
-
 }
 
 module.exports = YTComponents

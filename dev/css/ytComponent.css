@@ -1,0 +1,86 @@
+body {
+   background-color: black;
+}
+
+/*Sidebar*/
+#sidebar {
+   background-color: #111111;
+   height: 200vh;
+   padding-top: 10px;
+   margin-bottom: 10px;
+   margin-right: 10px;
+}
+
+#sidebar-ytLabel {
+   color: red
+}
+
+#sidebar-container {
+   list-style-type: none;
+   padding: 0px;
+}
+
+.sidebar-section {
+   margin-bottom: 12px;
+}
+
+.sidebar-section-header {
+   border-radius: 0px;
+   border-color: #123456;
+   color: #D23456;
+   margin-left: 6px;
+}
+
+#login-box {
+   background-color: red;
+   color: white;
+   margin-left: 5px;
+}
+
+#search-box {
+   margin-bottom: 15px;
+}
+
+/*Search Result*/
+#search-result-container {
+   z-index: 2;
+}
+
+#search-result {
+   border-radius: 0px;
+   background-color: #000000;
+   border: 1px solid #AAAAAA;
+   height 200vh;
+}
+
+#search-result-list {
+   padding: 0;
+   color: white;
+   list-style-type: none;
+}
+
+
+/*Main*/
+.content-container {
+   padding-left: 0px;
+   margin: 0px;
+}
+
+.view-group-option {
+   margin-left: 6px;
+}
+
+.view-group {
+   text-align: right;
+}
+
+
+.content-header {
+   margin-bottom: 20px;
+   color: #337ab7;
+   text-align: left;
+   font-size: 32px;
+   border-bottom: 2px #337ab7 solid
+}
+
+/*Library*/

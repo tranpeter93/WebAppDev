@@ -4,12 +4,15 @@ var assign = require('object-assign')
 var YoutubeConstants = require("../Constants/YoutubeConstants")
 
 var user = {
-      username: "",
+      // username: "",
       isSignedIn: false,
       channels: [],
       playlists: [],
       playlistItems: [],
-      activeListId: ""
+      searchResult: {
+         data: "",
+         isVisible: false
+      }
 }
 
 var set = function(resourceType, data) {
@@ -61,6 +64,21 @@ var YoutubeStore = assign({}, EventEmitter.prototype, {
 
          case YoutubeConstants.SIGN_IN:
             user.isSignedIn = action.data
+            YoutubeStore.emitChange();
+            break;
+
+         case YoutubeConstants.PROFILE:
+            user.profile = action.data;
+            YoutubeStore.emitChange();
+            break;
+
+         case YoutubeConstants.SEARCH_USERNAME:
+            user.searchResult.data = action.data;
+            YoutubeStore.emitChange();
+            break;
+
+         case YoutubeConstants.SEARCH_TOGGLE:
+            user.searchResult.isVisible = action.data;
             YoutubeStore.emitChange();
             break;
       }
